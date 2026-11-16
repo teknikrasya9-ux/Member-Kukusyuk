@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Logo } from './Logo';
 import { Crown, ShieldCheck, CreditCard, Clock, User, LogOut, Menu, X, ExternalLink } from 'lucide-react';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, ADMIN_EMAIL } from '../lib/supabaseClient';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
@@ -19,11 +19,18 @@ export const Navbar: React.FC = () => {
     fetchUser();
   }, [location.pathname]);
 
+  // Don't render general navbar on dedicated admin portal pages
+  if (location.pathname.startsWith('/admin')) {
+    return null;
+  }
+
+  const isAdmin = currentUser?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
   const navLinks = [
     { path: '/introduction', label: 'VIP Membership', icon: Crown },
     { path: '/payment', label: 'Form Pembayaran & QRIS', icon: CreditCard },
     { path: '/payment/waiting', label: 'Status Verifikasi', icon: Clock },
-    { path: '/admin/approvals', label: 'Admin Portal', icon: ShieldCheck, badge: 'Admin' },
+    ...(isAdmin ? [{ path: '/admin/dashboard', label: 'Dashboard Admin', icon: ShieldCheck, badge: 'Admin' }] : []),
   ];
 
   const handleLogout = async () => {
@@ -87,7 +94,12 @@ export const Navbar: React.FC = () => {
               <span className="text-neutral-200 font-medium truncate max-w-[120px]">
                 {currentUser.user_metadata?.first_name || currentUser.email?.split('@')[0]}
               </span>
-              {currentUser.user_metadata?.is_vip ? (
+              {isAdmin ? (
+                <span className="bg-amber-400 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+                  <ShieldCheck className="w-2.5 h-2.5 fill-current" />
+                  <span>ADMIN</span>
+                </span>
+              ) : currentUser.user_metadata?.is_vip ? (
                 <span className="bg-amber-400 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
                   <Crown className="w-2.5 h-2.5 fill-current" />
                   <span>VIP</span>
@@ -96,7 +108,7 @@ export const Navbar: React.FC = () => {
               <button
                 onClick={handleLogout}
                 title="Keluar"
-                className="text-neutral-400 hover:text-red-400 ml-1 p-0.5 rounded transition"
+                className="text-neutral-400 hover:text-red-400 ml-1 p-0.5 rounded transition cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>
@@ -161,4 +173,3 @@ export const Navbar: React.FC = () => {
     </nav>
   );
 };
-

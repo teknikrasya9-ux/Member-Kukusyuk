@@ -1,38 +1,42 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
+import { AdminFloatingButton } from './components/AdminFloatingButton';
 import { AuthPage } from './pages/AuthPage';
 import { IntroductionPage } from './pages/IntroductionPage';
 import { PaymentPage } from './pages/PaymentPage';
 import { PaymentWaitingPage } from './pages/PaymentWaitingPage';
-import { AdminApprovalsPage } from './pages/AdminApprovalsPage';
+import { AdminLoginPage } from './pages/AdminLoginPage';
+import { AdminDashboardPage } from './pages/AdminDashboardPage';
 
 export function App() {
   return (
     <Router>
       <div className="min-h-screen bg-zinc-950 text-slate-800 antialiased relative">
-        {/* Persistent Top Navigation Bar */}
+        {/* Navigation Bar (hidden on /admin routes automatically) */}
         <Navbar />
+
+        {/* Global Floating Admin Panel Button in bottom-right (hidden on /admin routes automatically) */}
+        <AdminFloatingButton />
 
         {/* Routes Definition */}
         <Routes>
-          {/* Auth: Login & Register */}
+          {/* Member Auth: Login & Register */}
           <Route path="/" element={<AuthPage />} />
+          <Route path="/login" element={<AuthPage />} />
 
-          {/* VIP Step 1: Penawaran & Manfaat VIP Member (Rp 60.000) */}
+          {/* Dedicated Admin Portal Routes */}
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+          <Route path="/admin/approvals" element={<Navigate to="/admin/dashboard" replace />} />
+
+          {/* VIP Member Registration Flow */}
           <Route path="/introduction" element={<IntroductionPage />} />
-
-          {/* VIP Step 2: Form Konfirmasi Data Diri, Kode Promo RPC & QRIS */}
           <Route path="/payment" element={<PaymentPage />} />
-
-          {/* VIP Step 3: Status Menunggu Verifikasi Admin Realtime */}
           <Route path="/payment/waiting" element={<PaymentWaitingPage />} />
 
-          {/* VIP Step 4: Admin Approvals Portal */}
-          <Route path="/admin/approvals" element={<AdminApprovalsPage />} />
-
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/introduction" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>
