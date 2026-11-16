@@ -333,7 +333,7 @@ export const AuthPage: React.FC = () => {
             {/* Title & Subtitle */}
             <div className="text-center mb-6">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-                Welcome back
+                Hallo Kakak
               </h2>
               <p className="text-sm font-medium text-gray-700/90 mt-1">
                 Please enter your details to sign in.
