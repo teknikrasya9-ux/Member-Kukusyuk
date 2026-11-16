@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, AlertCircle, Mail, Lock, User, Check, Sparkles } from 'lucide-react';
-import { GoogleButton } from '../components/GoogleButton';
+import { Eye, EyeOff, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { ForgotPasswordModal } from '../components/ForgotPasswordModal';
-import { OtpVerificationModal } from '../components/OtpVerificationModal';
 import { WhatsAppInterceptorModal } from '../components/WhatsAppInterceptorModal';
 import { TermsModal } from '../components/TermsModal';
 import { DestinationViews } from '../components/DestinationViews';
@@ -20,10 +18,8 @@ export const AuthPage: React.FC = () => {
 
   // Modals state
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
-  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
-  const [registeredEmailForOtp, setRegisteredEmailForOtp] = useState('');
 
   // Login Form State
   const [loginEmail, setLoginEmail] = useState('');
@@ -44,10 +40,8 @@ export const AuthPage: React.FC = () => {
   const [showRegConfirmPassword, setShowRegConfirmPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [regError, setRegError] = useState<string | null>(null);
+  const [regSuccess, setRegSuccess] = useState<string | null>(null);
   const [isRegisterLoading, setIsRegisterLoading] = useState(false);
-
-  // Google OAuth Loading
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   // Check URL params on initial mount
   useEffect(() => {
@@ -203,59 +197,21 @@ export const AuthPage: React.FC = () => {
 
       if (error) throw error;
 
-      // Temporary store profile data
-      setCurrentUser(data.user);
-      setRegisteredEmailForOtp(regEmail.trim());
+      if (data?.user) {
+        setCurrentUser(data.user);
+      }
 
-      // Open OTP Verification Pop-up directly
-      setIsOtpModalOpen(true);
+      // Email Confirmation Link notification (No 6-digit OTP modal)
+      setRegSuccess(
+        'Pendaftaran berhasil! Silakan cek kotak masuk atau folder Spam email Anda dan klik tautan konfirmasi untuk mengaktifkan akun.'
+      );
+      setLoginEmail(regEmail.trim());
+      setRegPassword('');
+      setRegConfirmPassword('');
     } catch (err: any) {
       setRegError(err?.message || 'Gagal melakukan pendaftaran. Silakan coba lagi.');
     } finally {
       setIsRegisterLoading(false);
-    }
-  };
-
-  // ----------------------------------------------------
-  // GOOGLE OAUTH
-  // ----------------------------------------------------
-  const handleGoogleAuth = async () => {
-    setIsGoogleLoading(true);
-    setLoginError(null);
-    setRegError(null);
-
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin + (isFromCheckout ? '?redirect=checkout' : ''),
-        },
-      });
-
-      if (error) throw error;
-
-      const { data: userData } = await supabase.auth.getUser();
-      if (userData?.user) {
-        handlePostAuthRedirect(userData.user);
-      }
-    } catch (err: any) {
-      const msg = err?.message || 'Gagal menghubungkan ke Google. Silakan coba lagi.';
-      if (view === 'login') setLoginError(msg);
-      else setRegError(msg);
-    } finally {
-      setIsGoogleLoading(false);
-    }
-  };
-
-  // ----------------------------------------------------
-  // OTP VERIFIED SUCCESS
-  // ----------------------------------------------------
-  const handleOtpVerified = () => {
-    setIsOtpModalOpen(false);
-    if (currentUser) {
-      handlePostAuthRedirect(currentUser);
-    } else {
-      setRedirectedTo(isFromCheckout ? 'checkout' : 'home');
     }
   };
 
@@ -342,12 +298,15 @@ export const AuthPage: React.FC = () => {
               </p>
             </div>
 
-            {/* Google OAuth Button */}
-            <GoogleButton
-              onClick={handleGoogleAuth}
-              isLoading={isGoogleLoading}
-              text="Sign in with Google"
-            />
+            {/* Registration Success Banner if user just registered */}
+            {regSuccess && (
+              <div className="mb-4 bg-emerald-100/95 border border-emerald-400 text-emerald-950 text-xs sm:text-sm rounded-2xl p-4 flex items-start gap-3 shadow-md animate-fadeIn">
+                <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-emerald-700" />
+                <div className="flex-1">
+                  <span className="leading-relaxed font-medium">{regSuccess}</span>
+                </div>
+              </div>
+            )}
 
             {/* Inline Error Message */}
             {loginError && (
@@ -479,12 +438,16 @@ export const AuthPage: React.FC = () => {
               </p>
             </div>
 
-            {/* Google OAuth Button */}
-            <GoogleButton
-              onClick={handleGoogleAuth}
-              isLoading={isGoogleLoading}
-              text="Sign up with Google"
-            />
+            {/* Success Message Banner */}
+            {regSuccess && (
+              <div className="mb-5 bg-emerald-100/95 border border-emerald-400 text-emerald-950 text-xs sm:text-sm rounded-2xl p-4 flex items-start gap-3 shadow-md animate-fadeIn">
+                <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-emerald-700" />
+                <div className="flex-1 space-y-1">
+                  <p className="font-bold text-emerald-900">Pendaftaran Berhasil!</p>
+                  <p className="leading-relaxed">{regSuccess}</p>
+                </div>
+              </div>
+            )}
 
             {/* Inline Error Message */}
             {regError && (
@@ -711,18 +674,10 @@ export const AuthPage: React.FC = () => {
         }}
       />
 
-      {/* MODAL 2: OTP Verification 6-Digit Modal */}
-      <OtpVerificationModal
-        isOpen={isOtpModalOpen}
-        email={registeredEmailForOtp}
-        onSuccess={handleOtpVerified}
-        onCancel={() => setIsOtpModalOpen(false)}
-      />
-
-      {/* MODAL 3: WhatsApp Number Interceptor Modal */}
+      {/* MODAL 2: WhatsApp Number Interceptor Modal */}
       <WhatsAppInterceptorModal
         isOpen={isWhatsAppModalOpen}
-        userId={currentUser?.id || 'google-user'}
+        userId={currentUser?.id || 'member-user'}
         userEmail={currentUser?.email || ''}
         onSuccess={handleWhatsAppSaved}
       />
