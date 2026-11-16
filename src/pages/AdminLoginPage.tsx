@@ -6,8 +6,8 @@ import { supabase, ADMIN_EMAIL, ADMIN_PASSWORD } from '../lib/supabaseClient';
 export const AdminLoginPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('fanshans99@gmail.com');
-  const [password, setPassword] = useState('KingBalakung77');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -131,7 +131,7 @@ export const AdminLoginPage: React.FC = () => {
                   setEmail(e.target.value);
                   setError(null);
                 }}
-                placeholder="fanshans99@gmail.com"
+                placeholder="Masukkan email administrator"
                 required
                 className="w-full bg-white/5 border border-white/15 focus:border-amber-400 rounded-xl px-3.5 py-2.5 text-white placeholder-neutral-500 text-sm outline-none transition"
               />

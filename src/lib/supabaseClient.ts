@@ -106,68 +106,8 @@ class MockAuthService {
 
   private initSampleSubscriptions() {
     const existing = localStorage.getItem('campusfit_vip_subscriptions');
-    if (!existing) {
-      const samples: VipSubscription[] = [
-        {
-          id: 'VIP-202611-102',
-          user_id: 'user-sample-1',
-          full_name: 'Siti Rahmawati',
-          phone_number: '+6285712345678',
-          active_email: 'siti.rahma@campus.ac.id',
-          job_status: 'Dosen',
-          promo_code: 'AJAKTEMANDAPATDISKON',
-          amount: 50000,
-          discount: 10000,
-          payment_proof_url: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80',
-          status: 'waiting_confirmation',
-          created_at: new Date(Date.now() - 3600000 * 1.5).toISOString(),
-        },
-        {
-          id: 'VIP-202611-101',
-          user_id: 'user-sample-2',
-          full_name: 'Rian Hidayat',
-          phone_number: '+6281398765432',
-          active_email: 'rian.hidayat@gmail.com',
-          job_status: 'Kantoran',
-          promo_code: null,
-          amount: 60000,
-          discount: 0,
-          payment_proof_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&auto=format&fit=crop&q=80',
-          status: 'approved',
-          created_at: new Date(Date.now() - 3600000 * 20).toISOString(),
-          approved_at: new Date(Date.now() - 3600000 * 18).toISOString(),
-        },
-        {
-          id: 'VIP-202611-099',
-          user_id: 'user-sample-3',
-          full_name: 'Aditya Pratama',
-          phone_number: '+6285811223344',
-          active_email: 'aditya.pratama@univ.ac.id',
-          job_status: 'Mahasiswa',
-          promo_code: 'CAMPUSFIT',
-          amount: 50000,
-          discount: 10000,
-          payment_proof_url: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80',
-          status: 'waiting_confirmation',
-          created_at: new Date(Date.now() - 3600000 * 0.5).toISOString(),
-        },
-        {
-          id: 'VIP-202611-095',
-          user_id: 'user-sample-4',
-          full_name: 'Dewi Anggraeni',
-          phone_number: '+6281987654321',
-          active_email: 'dewi.anggraeni@wirausaha.com',
-          job_status: 'Wirausaha',
-          promo_code: null,
-          amount: 60000,
-          discount: 0,
-          payment_proof_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&auto=format&fit=crop&q=80',
-          status: 'rejected',
-          rejection_reason: 'Foto bukti transfer buram dan tidak terdapat nomor referensi bank.',
-          created_at: new Date(Date.now() - 3600000 * 48).toISOString(),
-        }
-      ];
-      localStorage.setItem('campusfit_vip_subscriptions', JSON.stringify(samples));
+    if (!existing || existing.includes('user-sample-1')) {
+      localStorage.setItem('campusfit_vip_subscriptions', JSON.stringify([]));
     }
   }
 
