@@ -51,4 +51,4 @@ Website katering makanan kukus sehat kampus dengan autentikasi lengkap, alur pen
 npm run dev
 ```
 
-Buka `http://localhost:5173`.
+Buka `http
