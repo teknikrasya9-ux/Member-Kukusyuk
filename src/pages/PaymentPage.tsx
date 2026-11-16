@@ -516,66 +516,12 @@ export const PaymentPage: React.FC = () => {
               </div>
 
               {/* QR Image Box */}
-              <div className="w-56 h-56 mx-auto bg-gray-50 border-2 border-gray-200 rounded-xl p-3 flex flex-col items-center justify-center shadow-inner relative group">
-                {/* Authentic QR Vector Graphic */}
-                <svg className="w-full h-full" viewBox="0 0 200 200">
-                  <rect width="200" height="200" fill="#ffffff" rx="8"/>
-                  {/* Outer corner blocks */}
-                  <rect x="15" y="15" width="45" height="45" fill="#18181b" rx="4"/>
-                  <rect x="23" y="23" width="29" height="29" fill="#ffffff"/>
-                  <rect x="29" y="29" width="17" height="17" fill="#18181b"/>
-
-                  <rect x="140" y="15" width="45" height="45" fill="#18181b" rx="4"/>
-                  <rect x="148" y="23" width="29" height="29" fill="#ffffff"/>
-                  <rect x="154" y="29" width="17" height="17" fill="#18181b"/>
-
-                  <rect x="15" y="140" width="45" height="45" fill="#18181b" rx="4"/>
-                  <rect x="23" y="148" width="29" height="29" fill="#ffffff"/>
-                  <rect x="29" y="154" width="17" height="17" fill="#18181b"/>
-
-                  {/* QR Pattern dots */}
-                  <rect x="70" y="20" width="12" height="12" fill="#18181b"/>
-                  <rect x="90" y="20" width="12" height="12" fill="#18181b"/>
-                  <rect x="110" y="20" width="12" height="12" fill="#18181b"/>
-
-                  <rect x="70" y="40" width="12" height="12" fill="#18181b"/>
-                  <rect x="100" y="40" width="12" height="12" fill="#18181b"/>
-
-                  <rect x="20" y="70" width="12" height="12" fill="#18181b"/>
-                  <rect x="40" y="70" width="12" height="12" fill="#18181b"/>
-                  <rect x="70" y="70" width="12" height="12" fill="#18181b"/>
-                  <rect x="90" y="70" width="12" height="12" fill="#18181b"/>
-                  <rect x="120" y="70" width="12" height="12" fill="#18181b"/>
-                  <rect x="150" y="70" width="12" height="12" fill="#18181b"/>
-                  <rect x="170" y="70" width="12" height="12" fill="#18181b"/>
-
-                  <rect x="30" y="90" width="12" height="12" fill="#18181b"/>
-                  <rect x="60" y="90" width="12" height="12" fill="#18181b"/>
-                  <rect x="100" y="90" width="12" height="12" fill="#18181b"/>
-                  <rect x="140" y="90" width="12" height="12" fill="#18181b"/>
-                  <rect x="170" y="90" width="12" height="12" fill="#18181b"/>
-
-                  {/* Center Brand Badge */}
-                  <circle cx="100" cy="100" r="18" fill="#10b981"/>
-                  <circle cx="100" cy="100" r="15" fill="#ffffff"/>
-                  <text x="100" y="104" text-anchor="middle" font-size="10" font-weight="900" fill="#047857">KY</text>
-
-                  {/* Bottom QR dots */}
-                  <rect x="70" y="120" width="12" height="12" fill="#18181b"/>
-                  <rect x="100" y="120" width="12" height="12" fill="#18181b"/>
-                  <rect x="130" y="120" width="12" height="12" fill="#18181b"/>
-                  <rect x="160" y="120" width="12" height="12" fill="#18181b"/>
-
-                  <rect x="70" y="140" width="12" height="12" fill="#18181b"/>
-                  <rect x="90" y="140" width="12" height="12" fill="#18181b"/>
-                  <rect x="120" y="140" width="12" height="12" fill="#18181b"/>
-                  <rect x="150" y="140" width="12" height="12" fill="#18181b"/>
-
-                  <rect x="70" y="165" width="12" height="12" fill="#18181b"/>
-                  <rect x="100" y="165" width="12" height="12" fill="#18181b"/>
-                  <rect x="130" y="165" width="12" height="12" fill="#18181b"/>
-                  <rect x="170" y="165" width="12" height="12" fill="#18181b"/>
-                </svg>
+              <div className="mx-auto flex flex-col items-center justify-center relative group p-2">
+                <img
+                  src="/qris-kukusyuk.png"
+                  alt="QRIS Kukusyuk CampusFit"
+                  className="w-60 sm:w-64 h-auto object-contain mx-auto rounded-xl shadow-sm border border-gray-200"
+                />
               </div>
 
               <div className="mt-3">

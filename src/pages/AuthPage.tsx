@@ -5,6 +5,7 @@ import { GoogleButton } from '../components/GoogleButton';
 import { ForgotPasswordModal } from '../components/ForgotPasswordModal';
 import { OtpVerificationModal } from '../components/OtpVerificationModal';
 import { WhatsAppInterceptorModal } from '../components/WhatsAppInterceptorModal';
+import { TermsModal } from '../components/TermsModal';
 import { DestinationViews } from '../components/DestinationViews';
 import { supabase } from '../lib/supabaseClient';
 
@@ -21,6 +22,7 @@ export const AuthPage: React.FC = () => {
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [registeredEmailForOtp, setRegisteredEmailForOtp] = useState('');
 
   // Login Form State
@@ -333,7 +335,7 @@ export const AuthPage: React.FC = () => {
             {/* Title & Subtitle */}
             <div className="text-center mb-6">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-                Hallo Kakak
+                Hallo
               </h2>
               <p className="text-sm font-medium text-gray-700/90 mt-1">
                 Please enter your details to sign in.
@@ -654,10 +656,14 @@ export const AuthPage: React.FC = () => {
                     className="w-4 h-4 mt-0.5 rounded border-gray-400 text-zinc-900 focus:ring-zinc-900 accent-zinc-900 shrink-0"
                   />
                   <span>
-                    I accept all{' '}
-                    <span className="text-emerald-950 underline font-semibold hover:text-emerald-800">
-                      Terms &amp; Conditions
-                    </span>
+                    Saya menyetujui{' '}
+                    <button
+                      type="button"
+                      onClick={() => setIsTermsModalOpen(true)}
+                      className="text-emerald-900 hover:text-emerald-700 font-semibold underline inline cursor-pointer text-left"
+                    >
+                      Syarat &amp; Ketentuan Kuksyuk-CampusFit
+                    </button>
                   </span>
                 </label>
               </div>
@@ -719,6 +725,17 @@ export const AuthPage: React.FC = () => {
         userId={currentUser?.id || 'google-user'}
         userEmail={currentUser?.email || ''}
         onSuccess={handleWhatsAppSaved}
+      />
+
+      {/* MODAL 4: Terms and Conditions Modal */}
+      <TermsModal
+        isOpen={isTermsModalOpen}
+        onClose={() => setIsTermsModalOpen(false)}
+        onAgree={() => {
+          setAcceptTerms(true);
+          setIsTermsModalOpen(false);
+          setRegError(null);
+        }}
       />
     </div>
   );

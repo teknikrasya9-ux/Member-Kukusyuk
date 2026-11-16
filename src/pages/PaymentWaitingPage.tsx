@@ -99,9 +99,9 @@ export const PaymentWaitingPage: React.FC = () => {
         </div>
 
         {/* --------------------------------------------------------------------- */}
-        {/* CASE 1: PENDING (MENUNGGU VERIFIKASI ADMIN)                           */}
+        {/* CASE 1: PENDING / WAITING_CONFIRMATION (MENUNGGU VERIFIKASI ADMIN)   */}
         {/* --------------------------------------------------------------------- */}
-        {(!subscription || subscription.status === 'pending') && (
+        {(!subscription || subscription.status === 'pending' || subscription.status === 'waiting_confirmation') && (
           <div className="space-y-6">
             <div className="text-center">
               <div className="w-16 h-16 rounded-3xl bg-amber-100/90 text-amber-700 flex items-center justify-center mx-auto mb-4 border border-amber-300 shadow-md">
@@ -117,7 +117,7 @@ export const PaymentWaitingPage: React.FC = () => {
                 Bukti Pembayaran Sedang Diverifikasi
               </h1>
               <p className="text-xs sm:text-sm text-gray-700 mt-2 max-w-md mx-auto leading-relaxed">
-                Terima kasih! Bukti transfer Anda telah diterima sistem. Tim admin Kukusyuk akan memvalidasi keaslian mutasi QRIS Anda dalam 5–15 menit.
+                Terima kasih! Bukti transfer Anda telah diterima sistem. Pembayaran Anda saat ini sedang dalam proses verifikasi dan akan disetujui (ACC) oleh Admin maksimal dalam 1x24 jam.
               </p>
             </div>
 

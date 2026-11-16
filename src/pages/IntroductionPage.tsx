@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Logo } from '../components/Logo';
 import { 
@@ -7,56 +7,144 @@ import {
   ArrowRight, 
   Truck, 
   Percent, 
-  Utensils, 
   Clock, 
-  Flame, 
   Users, 
   GraduationCap, 
   Briefcase, 
   Sparkles,
   ShieldCheck,
-  HeartHandshake
+  HeartHandshake,
+  Bot,
+  TicketPercent,
+  BookOpen,
+  Layout,
+  Building2,
+  Apple
 } from 'lucide-react';
+
+// Live countdown timer for Card 4: next Monday batch cycle
+const BatchCountdown: React.FC = () => {
+  const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useEffect(() => {
+    const calculateTime = () => {
+      const now = new Date();
+      const target = new Date();
+      const day = now.getDay();
+      // Calculate days until next Monday (0 is Sunday, 1 is Monday)
+      const daysUntilMonday = ((1 + 7 - day) % 7) || 7;
+      target.setDate(now.getDate() + daysUntilMonday);
+      target.setHours(0, 0, 0, 0);
+
+      const diff = Math.max(0, target.getTime() - now.getTime());
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diff / (1000 * 60)) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+
+      setTimeLeft({ days: d, hours: h, minutes: m, seconds: s });
+    };
+
+    calculateTime();
+    const interval = setInterval(calculateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const pad = (n: number) => String(n).padStart(2, '0');
+
+  return (
+    <div className="mt-2 pt-2 border-t border-zinc-200">
+      <div className="flex items-center justify-between text-[10px] font-bold text-zinc-600 mb-1">
+        <span>Siklus Batch Baru:</span>
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+      </div>
+      <div className="bg-zinc-900 text-emerald-400 font-mono font-bold text-[11px] sm:text-xs py-1 px-1.5 rounded-lg text-center tracking-wider shadow-inner flex items-center justify-center gap-0.5">
+        <span>{timeLeft.days}d</span>
+        <span>:</span>
+        <span>{pad(timeLeft.hours)}h</span>
+        <span>:</span>
+        <span>{pad(timeLeft.minutes)}m</span>
+        <span>:</span>
+        <span>{pad(timeLeft.seconds)}s</span>
+      </div>
+    </div>
+  );
+};
 
 export const IntroductionPage: React.FC = () => {
   const navigate = useNavigate();
 
+  // 8 Keuntungan Eksklusif Member VIP
   const benefits = [
     {
-      icon: Percent,
-      title: 'Diskon Spesial Harian (Up to 25%)',
-      description: 'Potongan harga langsung untuk setiap menu katering kukus sehat (Steam Box, Herbal Chicken, Salad Bowl, Quinoa Rice).',
-      badge: 'Hemat Tiap Hari',
-    },
-    {
+      id: 1,
       icon: Truck,
-      title: 'Gratis Biaya Pengiriman (Free Delivery)',
-      description: 'Bebas ongkos kirim ke seluruh area kampus, asrama, kos sekitar, fakultas, hingga gedung perkantoran.',
+      title: 'Gratis Ongkir Surabaya',
+      description: 'Bebas ongkir ke seluruh area kampus & kos sekitar Surabaya tanpa minimum order.',
       badge: 'Bebas Ongkir',
+      badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300',
     },
     {
-      icon: Utensils,
-      title: 'Custom Menu & Kalori Konsultasi',
-      description: 'Bebas pilih target nutrisi (High Protein, Low Carbs, Vegetarian) dan konsultasi kebutuhan kalori harian.',
-      badge: 'Personalized',
+      id: 2,
+      icon: Bot,
+      title: 'Asisten Pribadi AI & Pengingat',
+      description: 'Bot pengingat jadwal makan, rekomendasi menu sesuai target kalori/diet harianmu via WA/App.',
+      badge: 'AI Smart Bot',
+      badgeClass: 'bg-blue-100 text-blue-900 border-blue-300',
     },
     {
+      id: 3,
+      icon: TicketPercent,
+      title: 'Kode Promo Khusus',
+      description: 'Voucher potongan harga berkala khusus VIP member untuk menu sehat favorit.',
+      badge: 'Diskon VIP',
+      badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+    },
+    {
+      id: 4,
       icon: Clock,
-      title: 'Slot Prioritas Jam Makan Siang',
-      description: 'Antrean pesanan Anda diprioritaskan saat jam sibuk istirahat kuliah & kantor tanpa khawatir kehabisan kuota.',
-      badge: 'Priority Rush',
+      title: 'Batch PO Khusus Mingguan',
+      description: 'Akses slot pemesanan batch mingguan lebih awal sebelum kuota publik habis.',
+      badge: 'Early Access',
+      badgeClass: 'bg-amber-100 text-amber-900 border-amber-300',
+      hasCountdown: true,
     },
     {
-      icon: Flame,
-      title: 'Cashback CampusFit Points 2x Lipat',
-      description: 'Dapatkan poin ganda pada setiap transaksi untuk ditukarkan dengan merchandise eksklusif atau voucher makan gratis.',
-      badge: 'Double Rewards',
+      id: 5,
+      icon: BookOpen,
+      title: 'Hack Makanan Kos (PDF Eksklusif)',
+      description: 'E-book panduan masak praktis alat kos (rice cooker & steamer mini) hemat gizi tinggi.',
+      badge: 'TOP SECRET',
+      badgeClass: 'bg-rose-600 text-white border-rose-800 animate-pulse font-black',
     },
     {
-      icon: Users,
-      title: 'Akses Komunitas Bugar & Meal-Prep Tips',
-      description: 'Bergabung di grup WhatsApp eksklusif VIP bersama nutrisionis kampus untuk tips workout & pola makan sehat.',
-      badge: 'VIP Community',
+      id: 6,
+      icon: Layout,
+      title: 'Template Notion Khusus Mahasiswa',
+      description: 'Template Notion tracker kuliah, budgeting uang bulanan, dan meal planner siap pakai.',
+      badge: 'Template Notion',
+      badgeClass: 'bg-purple-100 text-purple-900 border-purple-300',
+    },
+    {
+      id: 7,
+      icon: Building2,
+      title: 'Drop-off Lobi Fakultas',
+      description: 'Pengantaran terjadwal tepat waktu tepat di lobi fakultasmu setiap jam makan siang.',
+      badge: '12.00',
+      badgeClass: 'bg-amber-400 text-zinc-950 border-zinc-900 font-extrabold shadow-sm',
+    },
+    {
+      id: 8,
+      icon: Apple,
+      title: 'Bonus Brain Food Bulanan',
+      description: 'Camilan sehat kaya omega-3 & antioksidan gratis setiap bulan untuk boost fokus belajar/sidang.',
+      badge: 'Free Snack',
+      badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300',
     },
   ];
 
@@ -96,7 +184,7 @@ export const IntroductionPage: React.FC = () => {
       </div>
 
       {/* Main Glassmorphism Card */}
-      <div className="relative z-10 w-full max-w-4xl glass-panel rounded-3xl p-6 sm:p-10 shadow-2xl border border-white/40 my-6 animate-fadeIn">
+      <div className="relative z-10 w-full max-w-5xl glass-panel rounded-3xl p-6 sm:p-10 shadow-2xl border border-white/40 my-6 animate-fadeIn">
         {/* Header & Logo */}
         <div className="text-center mb-8">
           <div className="mb-4">
@@ -148,42 +236,50 @@ export const IntroductionPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Benefits Grid */}
+        {/* Benefits Grid - 8 Keuntungan Member */}
         <div className="mb-10">
           <div className="text-center mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight flex items-center justify-center gap-2">
-              <Sparkles className="w-5 h-5 text-amber-600" />
-              <span>Manfaat &amp; Keuntungan Eksklusif Member VIP</span>
+            <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center justify-center gap-2">
+              <Sparkles className="w-5 h-5 text-amber-500 fill-amber-500" />
+              <span>8 Keuntungan Eksklusif Member VIP</span>
             </h2>
             <p className="text-xs sm:text-sm text-gray-700 mt-1">
-              Didesain khusus untuk efisiensi waktu, kesehatan pencernaan, dan penghematan biaya bulanan.
+              Didesain khusus untuk efisiensi waktu kuliah, kesehatan pencernaan, dan penghematan biaya bulanan.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {benefits.map((benefit, idx) => {
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            {benefits.map((benefit) => {
               const Icon = benefit.icon;
               return (
                 <div
-                  key={idx}
-                  className="bg-white/50 hover:bg-white/70 transition-all duration-200 backdrop-blur-sm border border-white/60 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md flex items-start gap-4"
+                  key={benefit.id}
+                  className="bg-white/90 backdrop-blur-md rounded-2xl border-2 border-zinc-900 shadow-[4px_4px_0px_#18181b] hover:-translate-y-1 transition-all p-3.5 sm:p-4 flex flex-col justify-between group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <h3 className="font-bold text-gray-900 text-sm sm:text-base">
-                        {benefit.title}
-                      </h3>
-                      <span className="text-[10px] font-semibold text-emerald-900 bg-emerald-100/90 px-2 py-0.5 rounded-full border border-emerald-300 shrink-0">
+                  <div>
+                    {/* Header: Icon & Badge */}
+                    <div className="flex items-start justify-between gap-1.5 mb-2.5">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-zinc-900 text-emerald-400 flex items-center justify-center shrink-0 border border-zinc-800 shadow-sm group-hover:bg-emerald-700 group-hover:text-white transition-colors">
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </div>
+                      <span className={`text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 tracking-wide uppercase ${benefit.badgeClass}`}>
                         {benefit.badge}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-700 leading-relaxed">
+
+                    {/* Title */}
+                    <h3 className="font-extrabold text-gray-900 text-xs sm:text-sm leading-snug mb-1.5">
+                      {benefit.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-[11px] sm:text-xs text-gray-600 leading-relaxed">
                       {benefit.description}
                     </p>
                   </div>
+
+                  {/* Optional Countdown for Card 4 */}
+                  {benefit.hasCountdown && <BatchCountdown />}
                 </div>
               );
             })}

@@ -7,16 +7,32 @@ import { supabase, ADMIN_EMAIL } from '../lib/supabaseClient';
 export const Navbar: React.FC = () => {
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [hasWaitingVerification, setHasWaitingVerification] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUserAndStatus = async () => {
       const { data } = await supabase.auth.getUser();
       if (data?.user) {
         setCurrentUser(data.user);
+        try {
+          const res = await supabase.rpc('get_my_vip_subscription');
+          const sub = res?.data;
+          // Only show if user has an active submission with waiting_confirmation or pending status
+          if (sub && (sub.status === 'waiting_confirmation' || sub.status === 'pending')) {
+            setHasWaitingVerification(true);
+          } else {
+            setHasWaitingVerification(false);
+          }
+        } catch {
+          setHasWaitingVerification(false);
+        }
+      } else {
+        setCurrentUser(null);
+        setHasWaitingVerification(false);
       }
     };
-    fetchUser();
+    fetchUserAndStatus();
   }, [location.pathname]);
 
   // Don't render general navbar on dedicated admin portal pages
@@ -29,7 +45,17 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { path: '/introduction', label: 'VIP Membership', icon: Crown },
     { path: '/payment', label: 'Form Pembayaran & QRIS', icon: CreditCard },
-    { path: '/payment/waiting', label: 'Status Verifikasi', icon: Clock },
+    ...(hasWaitingVerification
+      ? [
+          {
+            path: '/payment/waiting',
+            label: 'Status Verifikasi',
+            icon: Clock,
+            isPulsing: true,
+            badge: 'Menunggu ACC',
+          },
+        ]
+      : []),
     ...(isAdmin ? [{ path: '/admin/dashboard', label: 'Dashboard Admin', icon: ShieldCheck, badge: 'Admin' }] : []),
   ];
 
@@ -77,8 +103,14 @@ export const Navbar: React.FC = () => {
                 <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-emerald-400'}`} />
                 <span>{link.label}</span>
                 {link.badge && (
-                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                    {link.badge}
+                  <span className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-amber-500/40 font-bold">
+                    {link.isPulsing && (
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
+                      </span>
+                    )}
+                    <span>{link.badge}</span>
                   </span>
                 )}
               </Link>
@@ -152,8 +184,14 @@ export const Navbar: React.FC = () => {
                   <span>{link.label}</span>
                 </div>
                 {link.badge && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
-                    {link.badge}
+                  <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-amber-500/40 font-bold">
+                    {link.isPulsing && (
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
+                      </span>
+                    )}
+                    <span>{link.badge}</span>
                   </span>
                 )}
               </Link>
