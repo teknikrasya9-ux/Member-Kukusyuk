@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Logo } from '../components/Logo';
 import { 
@@ -11,75 +11,20 @@ import {
   Users, 
   GraduationCap, 
   Briefcase, 
-  Sparkles,
-  ShieldCheck,
-  HeartHandshake,
-  Bot,
-  TicketPercent,
-  BookOpen,
-  Layout,
-  Building2,
-  Apple
+  Sparkles, 
+  ShieldCheck, 
+  HeartHandshake, 
+  Bot, 
+  TicketPercent, 
+  BookOpen, 
+  Building2, 
+  Apple 
 } from 'lucide-react';
-
-// Live countdown timer for Card 4: next Monday batch cycle
-const BatchCountdown: React.FC = () => {
-  const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    const calculateTime = () => {
-      const now = new Date();
-      const target = new Date();
-      const day = now.getDay();
-      // Calculate days until next Monday (0 is Sunday, 1 is Monday)
-      const daysUntilMonday = ((1 + 7 - day) % 7) || 7;
-      target.setDate(now.getDate() + daysUntilMonday);
-      target.setHours(0, 0, 0, 0);
-
-      const diff = Math.max(0, target.getTime() - now.getTime());
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-
-      setTimeLeft({ days: d, hours: h, minutes: m, seconds: s });
-    };
-
-    calculateTime();
-    const interval = setInterval(calculateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const pad = (n: number) => String(n).padStart(2, '0');
-
-  return (
-    <div className="mt-2 pt-2 border-t border-zinc-200">
-      <div className="flex items-center justify-between text-[10px] font-bold text-zinc-600 mb-1">
-        <span>Siklus Batch Baru:</span>
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-      </div>
-      <div className="bg-zinc-900 text-emerald-400 font-mono font-bold text-[11px] sm:text-xs py-1 px-1.5 rounded-lg text-center tracking-wider shadow-inner flex items-center justify-center gap-0.5">
-        <span>{timeLeft.days}d</span>
-        <span>:</span>
-        <span>{pad(timeLeft.hours)}h</span>
-        <span>:</span>
-        <span>{pad(timeLeft.minutes)}m</span>
-        <span>:</span>
-        <span>{pad(timeLeft.seconds)}s</span>
-      </div>
-    </div>
-  );
-};
 
 export const IntroductionPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // 8 Keuntungan Eksklusif Member VIP
+  // Daftar Keuntungan Eksklusif Member VIP
   const benefits = [
     {
       id: 1,
@@ -110,9 +55,8 @@ export const IntroductionPage: React.FC = () => {
       icon: Clock,
       title: 'Batch PO Khusus Mingguan',
       description: 'Akses slot pemesanan batch mingguan lebih awal sebelum kuota publik habis.',
-      badge: 'Early Access',
-      badgeClass: 'bg-amber-100 text-amber-900 border-amber-300',
-      hasCountdown: true,
+      badge: 'EARLY ACCESS',
+      badgeClass: 'bg-amber-100 text-amber-900 border-amber-300 font-bold',
     },
     {
       id: 5,
@@ -124,14 +68,6 @@ export const IntroductionPage: React.FC = () => {
     },
     {
       id: 6,
-      icon: Layout,
-      title: 'Template Notion Khusus Mahasiswa',
-      description: 'Template Notion tracker kuliah, budgeting uang bulanan, dan meal planner siap pakai.',
-      badge: 'Template Notion',
-      badgeClass: 'bg-purple-100 text-purple-900 border-purple-300',
-    },
-    {
-      id: 7,
       icon: Building2,
       title: 'Drop-off Lobi Fakultas',
       description: 'Pengantaran terjadwal tepat waktu tepat di lobi fakultasmu setiap jam makan siang.',
@@ -139,7 +75,7 @@ export const IntroductionPage: React.FC = () => {
       badgeClass: 'bg-amber-400 text-zinc-950 border-zinc-900 font-extrabold shadow-sm',
     },
     {
-      id: 8,
+      id: 7,
       icon: Apple,
       title: 'Bonus Brain Food Bulanan',
       description: 'Camilan sehat kaya omega-3 & antioksidan gratis setiap bulan untuk boost fokus belajar/sidang.',
@@ -236,19 +172,19 @@ export const IntroductionPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Benefits Grid - 8 Keuntungan Member */}
+        {/* Benefits Grid */}
         <div className="mb-10">
           <div className="text-center mb-6">
             <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center justify-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500 fill-amber-500" />
-              <span>8 Keuntungan Eksklusif Member VIP</span>
+              <span>Keuntungan Eksklusif Member VIP</span>
             </h2>
             <p className="text-xs sm:text-sm text-gray-700 mt-1">
               Didesain khusus untuk efisiensi waktu kuliah, kesehatan pencernaan, dan penghematan biaya bulanan.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {benefits.map((benefit) => {
               const Icon = benefit.icon;
               return (
@@ -277,9 +213,6 @@ export const IntroductionPage: React.FC = () => {
                       {benefit.description}
                     </p>
                   </div>
-
-                  {/* Optional Countdown for Card 4 */}
-                  {benefit.hasCountdown && <BatchCountdown />}
                 </div>
               );
             })}
