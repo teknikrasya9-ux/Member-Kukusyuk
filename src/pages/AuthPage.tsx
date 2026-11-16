@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, AlertCircle, Mail, Lock, User, Check, Sparkles } from 'lucide-react';
-import { Logo } from '../components/Logo';
 import { GoogleButton } from '../components/GoogleButton';
 import { ForgotPasswordModal } from '../components/ForgotPasswordModal';
 import { OtpVerificationModal } from '../components/OtpVerificationModal';
 import { WhatsAppInterceptorModal } from '../components/WhatsAppInterceptorModal';
-import { DemoSimulationBar } from '../components/DemoSimulationBar';
 import { DestinationViews } from '../components/DestinationViews';
-import { supabase, isUsingDemoMode } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 
 export const AuthPage: React.FC = () => {
+  const navigate = useNavigate();
+
   // Navigation / View State
   const [view, setView] = useState<'login' | 'register'>('login');
   const [isFromCheckout, setIsFromCheckout] = useState<boolean>(false);
@@ -46,10 +47,6 @@ export const AuthPage: React.FC = () => {
   // Google OAuth Loading
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  // Background image state (default high quality meal-prep salad on wooden table matching mockup)
-  const bgImage =
-    'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=2000&q=80';
-
   // Check URL params on initial mount
   useEffect(() => {
     try {
@@ -68,8 +65,12 @@ export const AuthPage: React.FC = () => {
     setCurrentUser(userObj);
 
     if (!isFromCheckout) {
-      // 1. If NOT from checkout -> Go to Home
-      setRedirectedTo('home');
+      // 1. If NOT from checkout -> Go to /introduction (if is_vip is false)
+      if (!userObj?.user_metadata?.is_vip) {
+        navigate('/introduction');
+      } else {
+        setRedirectedTo('home');
+      }
       return;
     }
 
@@ -231,12 +232,9 @@ export const AuthPage: React.FC = () => {
 
       if (error) throw error;
 
-      // In Demo Mode, retrieve the generated session
-      if (isUsingDemoMode) {
-        const { data: userData } = await supabase.auth.getUser();
-        if (userData?.user) {
-          handlePostAuthRedirect(userData.user);
-        }
+      const { data: userData } = await supabase.auth.getUser();
+      if (userData?.user) {
+        handlePostAuthRedirect(userData.user);
       }
     } catch (err: any) {
       const msg = err?.message || 'Gagal menghubungkan ke Google. Silakan coba lagi.';
@@ -274,28 +272,6 @@ export const AuthPage: React.FC = () => {
     setRedirectedTo('checkout');
   };
 
-  // ----------------------------------------------------
-  // QUICK FILL HELPERS (For evaluation/testing)
-  // ----------------------------------------------------
-  const handleQuickFillLogin = () => {
-    setView('login');
-    setLoginEmail('mahasiswa@campusfit.id');
-    setLoginPassword('password123');
-    setLoginError(null);
-  };
-
-  const handleQuickFillRegister = () => {
-    setView('register');
-    setRegFirstName('Farhan');
-    setRegSurname('Pratama');
-    setRegEmail('farhan.campusfit@gmail.com');
-    setRegPhone('81234567890');
-    setRegPassword('Kukusyuk2026!');
-    setRegConfirmPassword('Kukusyuk2026!');
-    setAcceptTerms(true);
-    setRegError(null);
-  };
-
   // Reset to Auth view from destination screen
   const handleBackToAuth = () => {
     setRedirectedTo(null);
@@ -321,37 +297,33 @@ export const AuthPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 md:p-10 overflow-x-hidden">
-      {/* 1. Full-screen Background Image with subtle dark overlay */}
-      <div className="fixed inset-0 z-0">
-        <img
-          src={bgImage}
-          alt="Kukusyuk Healthy Meal Prep"
-          className="w-full h-full object-cover object-center transform scale-105 filter brightness-95"
-        />
-        {/* Soft dark gradient overlay for optimal text contrast without losing aesthetic */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/35 to-black/50" />
+      {/* 1. Full-screen Background Image with bg-cover bg-center bg-no-repeat and overlay bg-black/15 */}
+      <div
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat min-h-screen w-full"
+        style={{ backgroundImage: "url('/bg-auth.jpg'), url('/images/bg-auth.jpg')" }}
+      >
+        {/* Soft subtle overlay bg-black/15 for crystal clear, luxurious glassmorphism effect */}
+        <div className="absolute inset-0 bg-black/15 pointer-events-none" />
       </div>
 
-      {/* Top Floating Demo Simulation Bar for testing flows */}
-      <DemoSimulationBar
-        isFromCheckout={isFromCheckout}
-        onToggleFromCheckout={(val) => setIsFromCheckout(val)}
-        onQuickFillLogin={handleQuickFillLogin}
-        onQuickFillRegister={handleQuickFillRegister}
-        currentView={view}
-        onSwitchView={setView}
-      />
-
-      {/* 2. Glassmorphism Card (Audit UX applied) */}
+      {/* 2. Glassmorphism Card */}
       <div
         className={`relative z-10 w-full glass-panel rounded-3xl transition-all duration-300 ${
           view === 'login' ? 'max-w-md p-6 sm:p-8' : 'max-w-xl p-6 sm:p-9'
         }`}
       >
-        {/* UX Audit #1: Consistent Kukusyuk Circular Logo on BOTH Login and Register */}
-        <div className="mb-3">
-          <Logo size="md" className="mx-auto" />
-        </div>
+        {/* Authentic Circular Kukusyuk Image Logo */}
+        <img
+          src="/logo-kukusyuk.png"
+          alt="Logo Kukusyuk"
+          className="w-20 h-20 object-contain mx-auto mb-3 rounded-full shadow-md"
+          onError={(e) => {
+            const target = e.currentTarget;
+            if (!target.src.includes('/images/logo-kukusyuk.png')) {
+              target.src = '/images/logo-kukusyuk.png';
+            }
+          }}
+        />
 
         {/* ---------------------------------------------------- */}
         {/* VIEW 1: LOGIN ("Welcome back")                      */}
@@ -375,7 +347,7 @@ export const AuthPage: React.FC = () => {
               text="Sign in with Google"
             />
 
-            {/* Inline Error Message (translucent red box, allowing user to retry without dead-end) */}
+            {/* Inline Error Message */}
             {loginError && (
               <div className="mb-4 bg-red-100/90 border border-red-300 text-red-900 text-xs sm:text-sm rounded-xl p-3 flex items-start gap-2 shadow-sm animate-shake">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-600" />
@@ -449,7 +421,7 @@ export const AuthPage: React.FC = () => {
                   <span>Remember me</span>
                 </label>
 
-                {/* UX Audit #2: High Contrast Link (text-emerald-900 hover:text-emerald-700 font-semibold underline) */}
+                {/* High Contrast Link */}
                 <button
                   type="button"
                   onClick={() => setIsForgotModalOpen(true)}
@@ -459,7 +431,7 @@ export const AuthPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Submit Button (Charcoal / Black) */}
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isLoginLoading}
@@ -476,7 +448,6 @@ export const AuthPage: React.FC = () => {
             {/* Footer Text */}
             <div className="text-center mt-5 text-xs sm:text-sm text-gray-800">
               <span>Don't have an account yet? </span>
-              {/* UX Audit #2: High Contrast Link */}
               <button
                 type="button"
                 onClick={() => {
@@ -496,12 +467,11 @@ export const AuthPage: React.FC = () => {
         {/* ---------------------------------------------------- */}
         {view === 'register' && (
           <div className="w-full animate-fadeIn">
-            {/* Title & Subtitle with UX Audit #3 replacement */}
+            {/* Title & Subtitle */}
             <div className="text-center mb-5">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
                 Sign Up
               </h2>
-              {/* UX Audit #3: Replaced (teks) with meaningful copy */}
               <p className="text-xs sm:text-sm font-medium text-gray-800 mt-1">
                 Daftar sekarang untuk mulai hidup sehat bersama Kukusyuk
               </p>
@@ -524,7 +494,7 @@ export const AuthPage: React.FC = () => {
               </div>
             )}
 
-            {/* Register Form (Exact 2-column Grid from mockup) */}
+            {/* Register Form */}
             <form onSubmit={handleRegisterSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Row 1 Left: First Name * */}
@@ -577,13 +547,12 @@ export const AuthPage: React.FC = () => {
                   />
                 </div>
 
-                {/* Row 2 Right: Phone Number * with +62 round circle indicator */}
+                {/* Row 2 Right: Phone Number * */}
                 <div>
                   <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-0.5">
                     Phone Number <span className="text-red-600 font-bold">*</span>
                   </label>
                   <div className="flex items-center gap-1.5 border-b border-gray-700/60 pb-1 focus-within:border-black transition">
-                    {/* Fixed +62 prefix with white circle pill matching mockup */}
                     <div className="flex items-center gap-1.5 bg-white/95 px-2 py-0.5 rounded-full shadow-sm border border-gray-300 shrink-0">
                       <div className="w-3.5 h-3.5 rounded-full bg-white border border-gray-400 flex items-center justify-center text-[9px] font-bold text-emerald-700">
                         •
@@ -607,7 +576,7 @@ export const AuthPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Row 3 Left: Password * with Minimum 8 characters & Eye */}
+                {/* Row 3 Left: Password * */}
                 <div>
                   <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-0.5">
                     Password <span className="text-red-600 font-bold">*</span>
@@ -639,7 +608,7 @@ export const AuthPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Row 3 Right: Confirm Password * with Eye */}
+                {/* Row 3 Right: Confirm Password * */}
                 <div>
                   <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-0.5">
                     Confirm Password <span className="text-red-600 font-bold">*</span>
@@ -672,7 +641,7 @@ export const AuthPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Checkbox: UX Audit #3 replacement for T&C */}
+              {/* Checkbox: T&C */}
               <div className="pt-2">
                 <label className="flex items-start gap-2.5 cursor-pointer select-none text-xs sm:text-sm text-gray-800 font-medium">
                   <input
@@ -693,7 +662,7 @@ export const AuthPage: React.FC = () => {
                 </label>
               </div>
 
-              {/* Submit Button (Sign up) */}
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isRegisterLoading || !acceptTerms}
@@ -710,7 +679,6 @@ export const AuthPage: React.FC = () => {
             {/* Footer Text */}
             <div className="text-center mt-5 text-xs sm:text-sm text-gray-800">
               <span>Already have an account? </span>
-              {/* UX Audit #2: High Contrast Link */}
               <button
                 type="button"
                 onClick={() => {
@@ -726,9 +694,7 @@ export const AuthPage: React.FC = () => {
         )}
       </div>
 
-      {/* ---------------------------------------------------- */}
-      {/* MODAL 1: Forgot Password Modal                       */}
-      {/* ---------------------------------------------------- */}
+      {/* MODAL 1: Forgot Password Modal */}
       <ForgotPasswordModal
         isOpen={isForgotModalOpen}
         onClose={() => setIsForgotModalOpen(false)}
@@ -739,9 +705,7 @@ export const AuthPage: React.FC = () => {
         }}
       />
 
-      {/* ---------------------------------------------------- */}
-      {/* MODAL 2: OTP Verification 6-Digit Modal              */}
-      {/* ---------------------------------------------------- */}
+      {/* MODAL 2: OTP Verification 6-Digit Modal */}
       <OtpVerificationModal
         isOpen={isOtpModalOpen}
         email={registeredEmailForOtp}
@@ -749,9 +713,7 @@ export const AuthPage: React.FC = () => {
         onCancel={() => setIsOtpModalOpen(false)}
       />
 
-      {/* ---------------------------------------------------- */}
-      {/* MODAL 3: WhatsApp Number Interceptor Modal           */}
-      {/* ---------------------------------------------------- */}
+      {/* MODAL 3: WhatsApp Number Interceptor Modal */}
       <WhatsAppInterceptorModal
         isOpen={isWhatsAppModalOpen}
         userId={currentUser?.id || 'google-user'}
@@ -761,4 +723,3 @@ export const AuthPage: React.FC = () => {
     </div>
   );
 };
-

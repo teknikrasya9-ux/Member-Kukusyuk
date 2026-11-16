@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, Eye, EyeOff, CheckCircle2, ArrowRight, AlertCircle, KeyRound } from 'lucide-react';
-import { supabase, isUsingDemoMode } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 
 interface ForgotPasswordModalProps {
   isOpen: boolean;
@@ -126,13 +126,6 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             : 'Masukkan kata sandi baru untuk akun Kukusyuk Anda.'}
         </p>
 
-        {/* Demo Mode Notice */}
-        {isUsingDemoMode && (
-          <div className="mb-4 text-xs bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-3 flex items-start gap-2">
-            <span className="font-bold">Demo Mode:</span>
-            <span>Anda dapat mencoba simulasi reset kata sandi langsung tanpa akun Supabase aktif.</span>
-          </div>
-        )}
 
         {/* Error message */}
         {error && (

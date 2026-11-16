@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ShieldCheck, RefreshCw, AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { supabase, isUsingDemoMode } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 
 interface OtpVerificationModalProps {
   isOpen: boolean;
@@ -208,15 +208,6 @@ export const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
           </div>
         </div>
 
-        {/* Demo Mode Helper Hint */}
-        {isUsingDemoMode && (
-          <div className="mb-5 text-xs bg-amber-50/90 border border-amber-200 text-amber-900 rounded-xl p-3 flex items-start gap-2">
-            <span className="font-bold shrink-0">Demo Mode:</span>
-            <span>
-              Masukkan kode OTP <span className="font-mono font-bold text-amber-950 bg-amber-200/60 px-1 py-0.5 rounded">123456</span> untuk verifikasi langsung.
-            </span>
-          </div>
-        )}
 
         {/* Error Notification */}
         {error && (

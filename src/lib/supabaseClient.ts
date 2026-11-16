@@ -1,4 +1,4 @@
-import { createClient, SupabaseClient, User, Session, AuthResponse } from '@supabase/supabase-js';
+import { createClient, SupabaseClient, User, Session } from '@supabase/supabase-js';
 
 // Environment variables
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -18,7 +18,26 @@ export interface MockProfile {
   surname?: string;
   email: string;
   phone_number: string | null;
+  job_status?: string;
+  is_vip?: boolean;
   created_at: string;
+}
+
+export interface VipSubscription {
+  id: string;
+  user_id: string;
+  full_name: string;
+  phone_number: string;
+  active_email: string;
+  job_status: string;
+  promo_code: string | null;
+  amount: number;
+  discount: number;
+  payment_proof_url: string;
+  status: 'pending' | 'approved' | 'rejected';
+  rejection_reason?: string | null;
+  created_at: string;
+  approved_at?: string | null;
 }
 
 // Local mock storage for seamless preview testing without Supabase setup
@@ -26,6 +45,15 @@ class MockAuthService {
   private mockUsers: Map<string, { password: string; profile: MockProfile }> = new Map();
   private currentSession: { user: User; session: Session } | null = null;
   private pendingOtps: Map<string, string> = new Map();
+
+  // Valid promo codes database (server-side simulation)
+  private promoCodes = [
+    { code: 'CAMPUSFIT', discount: 10000, maxUses: 100, currentUses: 12 },
+    { code: 'KUKUSSEHAT', discount: 10000, maxUses: 50, currentUses: 5 },
+    { code: 'MEMBERHEMAT', discount: 10000, maxUses: 50, currentUses: 8 },
+    { code: 'MAHASISWA', discount: 10000, maxUses: 200, currentUses: 45 },
+    { code: 'VIPKUKUS', discount: 10000, maxUses: 30, currentUses: 2 },
+  ];
 
   constructor() {
     // Initial demo user
@@ -37,7 +65,9 @@ class MockAuthService {
         first_name: 'Budi',
         surname: 'Santoso',
         email: 'mahasiswa@campusfit.id',
-        phone_number: '81234567890',
+        phone_number: '+6281234567890',
+        job_status: 'Mahasiswa',
+        is_vip: false,
         created_at: new Date().toISOString(),
       }
     });
@@ -47,14 +77,86 @@ class MockAuthService {
       const saved = localStorage.getItem('campusfit_mock_session');
       if (saved) {
         this.currentSession = JSON.parse(saved);
+      } else {
+        // Automatically sign in as default demo user for easy testing
+        const demoUser = this.mockUsers.get('mahasiswa@campusfit.id')!;
+        const user: User = {
+          id: demoUser.profile.id,
+          email: demoUser.profile.email,
+          app_metadata: {},
+          user_metadata: {
+            first_name: demoUser.profile.first_name,
+            surname: demoUser.profile.surname,
+            phone_number: demoUser.profile.phone_number,
+            full_name: `${demoUser.profile.first_name} ${demoUser.profile.surname}`.trim(),
+            job_status: demoUser.profile.job_status,
+            is_vip: false,
+          },
+          aud: 'authenticated',
+          created_at: demoUser.profile.created_at,
+        };
+        const session: Session = {
+          access_token: 'mock-jwt-token',
+          token_type: 'bearer',
+          expires_in: 3600,
+          refresh_token: 'mock-refresh-token',
+          user,
+        };
+        this.currentSession = { user, session };
+        localStorage.setItem('campusfit_mock_session', JSON.stringify(this.currentSession));
       }
+
+      // Initialize sample VIP subscriptions in localStorage if not exist
+      this.initSampleSubscriptions();
     } catch {
       // ignore
     }
   }
 
+  private initSampleSubscriptions() {
+    const existing = localStorage.getItem('campusfit_vip_subscriptions');
+    if (!existing) {
+      const samples: VipSubscription[] = [
+        {
+          id: 'VIP-202611-102',
+          user_id: 'user-sample-1',
+          full_name: 'Siti Rahmawati',
+          phone_number: '+6285712345678',
+          active_email: 'siti.rahma@campus.ac.id',
+          job_status: 'Dosen',
+          promo_code: 'CAMPUSFIT',
+          amount: 50000,
+          discount: 10000,
+          payment_proof_url: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=500&auto=format&fit=crop&q=80',
+          status: 'pending',
+          created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
+        },
+        {
+          id: 'VIP-202611-098',
+          user_id: 'user-sample-2',
+          full_name: 'Rian Hidayat',
+          phone_number: '+6281398765432',
+          active_email: 'rian.hidayat@gmail.com',
+          job_status: 'Kantoran',
+          promo_code: null,
+          amount: 60000,
+          discount: 0,
+          payment_proof_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=500&auto=format&fit=crop&q=80',
+          status: 'approved',
+          created_at: new Date(Date.now() - 3600000 * 24).toISOString(),
+          approved_at: new Date(Date.now() - 3600000 * 22).toISOString(),
+        }
+      ];
+      localStorage.setItem('campusfit_vip_subscriptions', JSON.stringify(samples));
+    }
+  }
+
+  get auth() {
+    return this;
+  }
+
   async signInWithPassword({ email, password }: { email: string; password: string }) {
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 400));
     const normalized = email.toLowerCase().trim();
     const existing = this.mockUsers.get(normalized);
 
@@ -73,6 +175,9 @@ class MockAuthService {
         first_name: existing.profile.first_name,
         surname: existing.profile.surname,
         phone_number: existing.profile.phone_number,
+        full_name: `${existing.profile.first_name} ${existing.profile.surname || ''}`.trim(),
+        job_status: existing.profile.job_status || 'Mahasiswa',
+        is_vip: existing.profile.is_vip || false,
       },
       aud: 'authenticated',
       created_at: existing.profile.created_at,
@@ -92,7 +197,7 @@ class MockAuthService {
   }
 
   async signUp({ email, password, options }: { email: string; password: string; options?: any }) {
-    await new Promise((r) => setTimeout(r, 700));
+    await new Promise((r) => setTimeout(r, 500));
     const normalized = email.toLowerCase().trim();
 
     const firstName = options?.data?.first_name || 'Member';
@@ -106,11 +211,12 @@ class MockAuthService {
       surname,
       email: normalized,
       phone_number: phoneNumber,
+      job_status: 'Mahasiswa',
+      is_vip: false,
       created_at: new Date().toISOString(),
     };
 
     this.mockUsers.set(normalized, { password, profile });
-    // Generate 6-digit OTP code (default demo code: 123456 or random)
     const demoOtp = '123456';
     this.pendingOtps.set(normalized, demoOtp);
 
@@ -118,7 +224,14 @@ class MockAuthService {
       id: newId,
       email: normalized,
       app_metadata: {},
-      user_metadata: { first_name: firstName, surname, phone_number: phoneNumber },
+      user_metadata: {
+        first_name: firstName,
+        surname,
+        phone_number: phoneNumber,
+        full_name: `${firstName} ${surname}`.trim(),
+        job_status: 'Mahasiswa',
+        is_vip: false,
+      },
       aud: 'authenticated',
       created_at: profile.created_at,
     };
@@ -126,23 +239,27 @@ class MockAuthService {
     return {
       data: { user, session: null },
       error: null,
-      demoOtp, // helpful for user hint in preview mode
+      demoOtp,
     };
   }
 
   async verifyOtp({ email, token }: { email: string; token: string; type?: string }) {
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 400));
     const normalized = email.toLowerCase().trim();
     const storedOtp = this.pendingOtps.get(normalized) || '123456';
 
-    // Allow token 123456 or storedOtp for easy testing
     if (token === storedOtp || token === '123456') {
       const existing = this.mockUsers.get(normalized);
       const user: User = {
         id: existing?.profile.id || 'user-' + Date.now(),
         email: normalized,
         app_metadata: {},
-        user_metadata: existing?.profile || {},
+        user_metadata: existing?.profile || {
+          first_name: 'Member',
+          full_name: 'Member Baru',
+          phone_number: '',
+          is_vip: false,
+        },
         aud: 'authenticated',
         created_at: new Date().toISOString(),
       };
@@ -166,20 +283,19 @@ class MockAuthService {
   }
 
   async resendOtp(email: string) {
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 300));
     const normalized = email.toLowerCase().trim();
-    const newOtp = '123456';
-    this.pendingOtps.set(normalized, newOtp);
+    this.pendingOtps.set(normalized, '123456');
     return { data: { message: 'OTP berhasil dikirim ulang' }, error: null };
   }
 
   async resetPasswordForEmail(email: string) {
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 400));
     return { data: {}, error: null };
   }
 
   async updateUser({ password }: { password?: string }) {
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 300));
     if (this.currentSession?.user.email) {
       const u = this.mockUsers.get(this.currentSession.user.email);
       if (u && password) {
@@ -190,18 +306,18 @@ class MockAuthService {
   }
 
   async signInWithOAuth({ provider, options }: { provider: string; options?: any }) {
-    await new Promise((r) => setTimeout(r, 800));
-    // Simulate Google OAuth login
+    await new Promise((r) => setTimeout(r, 500));
     const googleEmail = 'google.student@campusfit.id';
     const googleId = 'google-user-' + Math.floor(Math.random() * 1000);
     
-    // In Google Auth, user profile might initially NOT have phone number
     const profile: MockProfile = {
       id: googleId,
       first_name: 'Google',
       surname: 'User',
       email: googleEmail,
-      phone_number: null, // intentionally null to trigger interceptor if redirect=checkout!
+      phone_number: null,
+      job_status: 'Mahasiswa',
+      is_vip: false,
       created_at: new Date().toISOString(),
     };
 
@@ -214,8 +330,11 @@ class MockAuthService {
       user_metadata: {
         first_name: 'Google',
         surname: 'User',
+        full_name: 'Google User',
         avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face',
         phone_number: null,
+        job_status: 'Mahasiswa',
+        is_vip: false,
       },
       aud: 'authenticated',
       created_at: profile.created_at,
@@ -248,6 +367,200 @@ class MockAuthService {
     return { error: null };
   }
 
+  // -----------------------------------------------------------
+  // SERVER-SIDE POSTGRESQL RPC FUNCTIONS SIMULATION
+  // -----------------------------------------------------------
+  async rpc(functionName: string, params?: any) {
+    await new Promise((r) => setTimeout(r, 400));
+
+    // 1. verify_promo_code
+    if (functionName === 'verify_promo_code') {
+      const rawCode = (params?.input_code || '').trim().toUpperCase();
+      const matched = this.promoCodes.find((p) => p.code === rawCode);
+
+      if (matched && matched.currentUses < matched.maxUses) {
+        return {
+          data: [
+            {
+              is_valid: true,
+              discount: matched.discount, // Rp 10.000
+              final_price: 50000,         // Rp 50.000
+              message: `Selamat! Kode promo "${matched.code}" berhasil diterapkan (Potongan Rp 10.000).`,
+            }
+          ],
+          error: null,
+        };
+      }
+
+      return {
+        data: [
+          {
+            is_valid: false,
+            discount: 0,
+            final_price: 60000,
+            message: `Kode promo "${rawCode}" tidak valid, sudah kedaluwarsa, atau kuota telah habis.`,
+          }
+        ],
+        error: null,
+      };
+    }
+
+    // 2. submit_vip_subscription
+    if (functionName === 'submit_vip_subscription') {
+      try {
+        const subscriptions: VipSubscription[] = JSON.parse(
+          localStorage.getItem('campusfit_vip_subscriptions') || '[]'
+        );
+
+        const newId = 'VIP-' + new Date().getFullYear() + String(new Date().getMonth() + 1).padStart(2, '0') + '-' + Math.floor(100 + Math.random() * 900);
+        
+        const newSub: VipSubscription = {
+          id: newId,
+          user_id: this.currentSession?.user.id || 'guest-' + Date.now(),
+          full_name: params.p_full_name || 'Member',
+          phone_number: params.p_phone_number || '',
+          active_email: params.p_active_email || '',
+          job_status: params.p_job_status || 'Mahasiswa',
+          promo_code: params.p_promo_code || null,
+          amount: params.p_amount || 60000,
+          discount: params.p_promo_code ? 10000 : 0,
+          payment_proof_url: params.p_payment_proof_url || '',
+          status: 'pending',
+          created_at: new Date().toISOString(),
+        };
+
+        subscriptions.unshift(newSub);
+        localStorage.setItem('campusfit_vip_subscriptions', JSON.stringify(subscriptions));
+
+        // Also save as current user's active submission for /payment/waiting
+        localStorage.setItem('campusfit_current_subscription', JSON.stringify(newSub));
+
+        return {
+          data: {
+            success: true,
+            subscription_id: newId,
+            message: 'Bukti pembayaran berhasil dikirim! Menunggu konfirmasi verifikasi admin.',
+          },
+          error: null,
+        };
+      } catch (err: any) {
+        return { data: null, error: { message: err?.message || 'Gagal menyimpan pengajuan VIP.' } };
+      }
+    }
+
+    // 3. get_my_vip_subscription
+    if (functionName === 'get_my_vip_subscription' || functionName === 'get_vip_subscription_status') {
+      try {
+        const subscriptions: VipSubscription[] = JSON.parse(
+          localStorage.getItem('campusfit_vip_subscriptions') || '[]'
+        );
+        const subId = params?.p_subscription_id;
+        
+        let found = null;
+        if (subId) {
+          found = subscriptions.find((s) => s.id === subId);
+        } else if (this.currentSession?.user) {
+          found = subscriptions.find((s) => s.user_id === this.currentSession!.user.id || s.active_email === this.currentSession!.user.email);
+        }
+
+        if (!found) {
+          const current = localStorage.getItem('campusfit_current_subscription');
+          if (current) found = JSON.parse(current);
+        }
+
+        return { data: found || null, error: null };
+      } catch (err: any) {
+        return { data: null, error: { message: err.message } };
+      }
+    }
+
+    // 4. get_all_vip_subscriptions (for /admin/approvals)
+    if (functionName === 'get_all_vip_subscriptions' || functionName === 'get_pending_subscriptions') {
+      try {
+        const subscriptions: VipSubscription[] = JSON.parse(
+          localStorage.getItem('campusfit_vip_subscriptions') || '[]'
+        );
+        return { data: subscriptions, error: null };
+      } catch (err: any) {
+        return { data: [], error: { message: err.message } };
+      }
+    }
+
+    // 5. approve_vip_subscription
+    if (functionName === 'approve_vip_subscription') {
+      try {
+        const subId = params?.p_subscription_id;
+        const subscriptions: VipSubscription[] = JSON.parse(
+          localStorage.getItem('campusfit_vip_subscriptions') || '[]'
+        );
+
+        const target = subscriptions.find((s) => s.id === subId);
+        if (target) {
+          target.status = 'approved';
+          target.approved_at = new Date().toISOString();
+          localStorage.setItem('campusfit_vip_subscriptions', JSON.stringify(subscriptions));
+
+          // If matches current subscription
+          const current = localStorage.getItem('campusfit_current_subscription');
+          if (current) {
+            const parsed = JSON.parse(current);
+            if (parsed.id === subId) {
+              parsed.status = 'approved';
+              parsed.approved_at = target.approved_at;
+              localStorage.setItem('campusfit_current_subscription', JSON.stringify(parsed));
+            }
+          }
+
+          // Update user metadata is_vip = true
+          if (this.currentSession?.user) {
+            this.currentSession.user.user_metadata.is_vip = true;
+            localStorage.setItem('campusfit_mock_session', JSON.stringify(this.currentSession));
+          }
+
+          return { data: { success: true, message: `Pendaftaran ${target.full_name} disetujui!` }, error: null };
+        }
+        return { data: null, error: { message: 'Pengajuan tidak ditemukan.' } };
+      } catch (err: any) {
+        return { data: null, error: { message: err.message } };
+      }
+    }
+
+    // 6. reject_vip_subscription
+    if (functionName === 'reject_vip_subscription') {
+      try {
+        const subId = params?.p_subscription_id;
+        const reason = params?.p_rejection_reason || 'Bukti transfer tidak valid atau nominal tidak sesuai.';
+        const subscriptions: VipSubscription[] = JSON.parse(
+          localStorage.getItem('campusfit_vip_subscriptions') || '[]'
+        );
+
+        const target = subscriptions.find((s) => s.id === subId);
+        if (target) {
+          target.status = 'rejected';
+          target.rejection_reason = reason;
+          localStorage.setItem('campusfit_vip_subscriptions', JSON.stringify(subscriptions));
+
+          const current = localStorage.getItem('campusfit_current_subscription');
+          if (current) {
+            const parsed = JSON.parse(current);
+            if (parsed.id === subId) {
+              parsed.status = 'rejected';
+              parsed.rejection_reason = reason;
+              localStorage.setItem('campusfit_current_subscription', JSON.stringify(parsed));
+            }
+          }
+
+          return { data: { success: true, message: 'Pengajuan telah ditolak.' }, error: null };
+        }
+        return { data: null, error: { message: 'Pengajuan tidak ditemukan.' } };
+      } catch (err: any) {
+        return { data: null, error: { message: err.message } };
+      }
+    }
+
+    return { data: null, error: { message: `Function "${functionName}" not recognized.` } };
+  }
+
   // Mock table queries
   from(tableName: string) {
     const self = this;
@@ -257,23 +570,23 @@ class MockAuthService {
           eq(field: string, value: any) {
             return {
               async single() {
-                await new Promise((r) => setTimeout(r, 300));
+                await new Promise((r) => setTimeout(r, 200));
                 if (tableName === 'profiles') {
-                  const userEntry = Array.from(self.mockUsers.values()).find(
-                    (u) => (field === 'id' && u.profile.id === value) || (field === 'email' && u.profile.email === value)
-                  );
-                  if (userEntry) {
-                    return { data: userEntry.profile, error: null };
+                  for (const [, userObj] of self.mockUsers) {
+                    if ((field === 'id' && userObj.profile.id === value) || (field === 'email' && userObj.profile.email === value)) {
+                      return { data: userObj.profile, error: null };
+                    }
                   }
-                  // Check current session
                   if (self.currentSession && self.currentSession.user.id === value) {
                     return {
                       data: {
                         id: self.currentSession.user.id,
-                        first_name: self.currentSession.user.user_metadata?.first_name || 'Member',
-                        surname: self.currentSession.user.user_metadata?.surname || '',
-                        email: self.currentSession.user.email || '',
-                        phone_number: self.currentSession.user.user_metadata?.phone_number || null,
+                        first_name: self.currentSession.user.user_metadata?.first_name || 'Budi',
+                        surname: self.currentSession.user.user_metadata?.surname || 'Santoso',
+                        email: self.currentSession.user.email || 'mahasiswa@campusfit.id',
+                        phone_number: self.currentSession.user.user_metadata?.phone_number || '+6281234567890',
+                        job_status: self.currentSession.user.user_metadata?.job_status || 'Mahasiswa',
+                        is_vip: self.currentSession.user.user_metadata?.is_vip || false,
                         created_at: new Date().toISOString(),
                       },
                       error: null
@@ -291,7 +604,7 @@ class MockAuthService {
           eq(field: string, value: any) {
             return {
               async single() {
-                await new Promise((r) => setTimeout(r, 400));
+                await new Promise((r) => setTimeout(r, 300));
                 if (tableName === 'profiles') {
                   for (const [, userObj] of self.mockUsers) {
                     if ((field === 'id' && userObj.profile.id === value) || (field === 'email' && userObj.profile.email === value)) {
@@ -310,7 +623,7 @@ class MockAuthService {
         };
       },
       async upsert(values: any) {
-        await new Promise((r) => setTimeout(r, 400));
+        await new Promise((r) => setTimeout(r, 300));
         return { data: values, error: null };
       }
     };
@@ -329,7 +642,7 @@ if (isConfigured) {
   }
 }
 
-// Unified client interface
+// Unified client interface with safe fallback
 export const supabase = realClient || (mockAuthService as unknown as SupabaseClient);
 
 // Helper for UI to know state
