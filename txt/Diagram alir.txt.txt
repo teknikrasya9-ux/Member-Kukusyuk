@@ -1,0 +1,51 @@
+Diagram Alir SignUp-SignIn Login 
+
+[Start: Klik "Masuk / Daftar" di Navbar ATAU Dialihkan dari Checkout]
+                                   │
+                                   ▼
+                     [Halaman Login ("Welcome back")]
+       ┌───────────────────────────┼──────────────┬───────────────────────────┐
+       │                           │              │                           │
+(Klik "Forgot password?")   (Isi Email &   (Klik Tombol               (Klik "Sign Up")
+       │                     Password)      Google)                           │
+       ▼                           │              │                           ▼
+[Modal Reset Kata Sandi]           ▼              │             [Register Page ("Sign Up")]
+(Input Email Terdaftar)     [Klik "Login"]        │               ┌───────────┴───────────┐
+       │                           │              │        (Klik Google)       (Isi Form & S&K)
+       ▼                           ▼              │               │                       │
+[Input Password Baru &      <Kredensial           │               │                       ▼
+ Konfirmasi Password]         Valid?>             │               │              <Input & S&K Valid?>
+       │                     │      │             │               │               │              │
+       ▼                  (Tidak)  (Ya)           │               │            (Tidak)          (Ya)
+[Sukses Reset Sandi]         │      │             │               │               │              │
+       │                     ▼      │             │               │               ▼              ▼
+       │          [Tampilkan Error] │             │               │      [Tampilkan Error] [Pop-up Verifikasi
+       │               │            │             │               │         (Kembali ke     Akun: Input OTP]
+       └───────────────┴──► (Kembali ke Login)    │               │          Form Daftar)          │
+                                    │             │               │                        ▼
+                                    │             └───────┬───────┘                 <Kode OTP Valid?>
+                                    │                     │                          │            │
+                                    │                     ▼                       (Tidak)        (Ya)
+                                    │              [OAuth Google]                    │            │
+                                    │                     │                          ▼            │
+                                    │                     │               [Error / Kirim Ulang]   │
+                                    │                     │                 (Ulangi Input OTP)    │
+                                    └─────────────────────┼───────────────────────────────────────┘
+                                                          ▼
+                                           <Datang dari Halaman Checkout?>
+                                                │                   │
+                                             (Tidak)               (Ya)
+                                                │                   │
+                                                ▼                   ▼
+                                     [Masuk ke Halaman     <No. WhatsApp (+62)
+                                       Utama (Home)]         Sudah Terdaftar?>
+                                                             │              │
+                                                          (Tidak)          (Ya)
+                                                             │              │
+                                                             ▼              │
+                                                    [Pop-up Lengkapi        │
+                                                     No. WhatsApp (+62)]    │
+                                                             │              │
+                                                             └──────┬───────┘
+                                                                    ▼
+                                                       [Lanjut ke Halaman Checkout]
