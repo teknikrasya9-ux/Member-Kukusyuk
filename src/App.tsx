@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
-import { AdminFloatingButton } from './components/AdminFloatingButton';
 import { AuthPage } from './pages/AuthPage';
 import { IntroductionPage } from './pages/IntroductionPage';
 import { PaymentPage } from './pages/PaymentPage';
@@ -15,9 +14,6 @@ export function App() {
       <div className="min-h-screen bg-zinc-950 text-slate-800 antialiased relative">
         {/* Navigation Bar (hidden on /admin routes automatically) */}
         <Navbar />
-
-        {/* Global Floating Admin Panel Button in bottom-right (hidden on /admin routes automatically) */}
-        <AdminFloatingButton />
 
         {/* Routes Definition */}
         <Routes>
