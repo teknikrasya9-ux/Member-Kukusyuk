@@ -1,0 +1,55 @@
+[Pengunjung Membuka Website]
+             │
+             ▼
+ <Coba Akses Halaman VIP?> ──(Ya)──► <Akun Terdaftar & Login?> ──(Tidak)──┐
+             │                                  │                         │
+          (Tidak)                              (Ya)                       │
+             │                                  │                         ▼
+             │                                  ▼            [Langkah 9: Blokir Akses &
+             │                       <Status is_vip = TRUE?>  Alihkan ke Login / Daftar]
+             │                          │              │                  ▲
+             │                        (Ya)          (Tidak)               │
+             │                          │              │                  │
+             ▼                          ▼              │                  │
+[Langkah 1: Sign In / Sign Up]   [Masuk Dashboard      │                  │
+ (Google OAuth atau Email+Pass)     Fitur VIP]         │                  │
+             │                                         │                  │
+             ▼                                         │                  │
+[Langkah 2: Introduction Page] ◄───────────────────────┘                  │
+ (Benefit VIP Rp60.000 & Fitur)                                           │
+             │                                                            │
+  (Klik "Join Sekarang")                                                  │
+             ▼                                                            │
+[Langkah 3: Halaman Form Pembayaran]                                      │
+ (Isi Ulang No. HP, Email Aktif, Status Pekerjaan)                        │
+             │                                                            │
+             ▼                                                            │
+[Langkah 4 & 5: Tampilan QRIS (60K) + Input Kode Promo]                   │
+  ├── Klik "Chat Admin" ──► (Buka WhatsApp Admin untuk minta kode)        │
+  └── Input "AJAKTEMANDAPATDISKON" ──► <Kode Valid?>                      │
+                                         │        │                       │
+                                      (Tidak)    (Ya)                     │
+                                         │        │                       │
+                                         ▼        ▼                       │
+                             [Harga Tetap 60K]  [Harga Berubah: 50K]      │
+                                         │        │                       │
+                                         └───┬────┘                       │
+                                             ▼                            │
+                     [Langkah 6: Status "Siap Dibayar" (50K / 60K)]       │
+                                             │                            │
+                            (User Scan QRIS & Konfirmasi Bayar)           │
+                                             ▼                            │
+                     [Langkah 7: Page "Menunggu Konfirmasi Admin"]        │
+                         (Estimasi Proses Maksimal 1x24 Jam)              │
+                                             │                            │
+                                  <Admin Cek Mutasi &                     │
+                                   Validasi Promo?>                       │
+                                     │          │                         │
+                                  (Tolak)    (Setujui)                    │
+                                     │          │                         │
+                                     ▼          ▼                         │
+                     [Notifikasi Ditolak]   [Langkah 8: Update            │
+                      (Ulangi Bayar)         is_vip = TRUE]               │
+                                                │                         │
+                                                ▼                         │
+                                      [Resmi Jadi Member VIP] ────────────┘

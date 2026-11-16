@@ -1,0 +1,7 @@
+Buat Prompt untuk Antigravity 
+1.  hero pada menu utama "Welcome Back" menjadi "Hallo"
+2. Status verfikasi di hapus, tampilkan bila user dalam proses pembayaran dan akan di setujui bila admin acc 
+3. Catatan Implementasi pada Halaman Register (AuthPage.tsx):
+Pada desain Register Page Anda sebelumnya, label checkbox masih tertulis "I accept all terms & condition (kalau ada)". Ubah teks tersebut menjadi "Saya menyetujui Syarat & Ketentuan Kuksyuk-CampusFit" dengan kata Syarat & Ketentuan berupa tautan aktif yang membuka jendela pop-up (modal) berisi poin-poin di atas agar pengguna dapat membacanya sebelum mencentang persetujuan. Sesuaikan Term pada referensi : Syarat dan Ketentuan menjadi VIP-Membership.txt
+4. sesuiakan manfaat membership seperti referensi : Keuntungan membership.txt. sesuaikan tema seperti web 
+5. pada section Rincian Tagih dan Qris Statis masukkan gambar qris-kukusyuk.png pada folder public. 

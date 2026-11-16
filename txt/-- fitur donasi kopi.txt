@@ -1,0 +1,43 @@
+-- fitur donasi kopi
+
+* Login Page : Rasya P
+-- login gugel, atau login email address 
+-- sign in 
+-- sing up 
+-- page forgot password 
+-- page sign up 
+
+* main Page pra-member
+-- Fitur apa saja yang akan didapat 
+-- ayo join sekarang 
+
+
+* main page membership VIP
+-- masuk kode referral yang telah di berikan admin 
+-- jika gagal, maka tidak bisa masuk 
+-- fitur pengingat, jika user masuk Kembali ke membership 
+
+-- Loading page to main VIP membership 
+
+
+* fitur Sidebar Navigation Menu
+-- Pesan dengan gratis Ongkir (layanan antar langsung)
+-- AI Asisten 
+-- Kode Promo potongan tiap hari 
+-- Batch info apa saja di minggu ini ?
+-- Modul Hack makanan sehat anak kos 
+-- tamplate notion mahasiswa : akses tamplate notion berupa meal planner yang terintegrasi tracker tugas, proyek, dan jadwal kuliah, 
+-- bonus Brain food mingguan (satu porsi kecil snack bergizi setiap order) 
+-- DISKON RAME-RAME !!
+-- dapat poin jika membeli produk kukusyuk 
+-- Komunitas sehat Surabaya 
+-- KUKUSYUK BUSSINESS KIT : Bonus akses tamplate deck presentasi, draft email outreach professional, dan asset visual kukusyuk dalam membantu kepanitiaan member
+ 
+-- Fisik "Cheat Sheet" di Kotak Makan: Menyelipkan kartu referensi cepat yang berganti-ganti setiap bulan di dalam kotak katering. Kartunya bisa berisi rangkuman shortcut produktivitas (seperti perintah VS Code atau terminal Linux), tabel rumus komputasi cepat, atau tips manajemen basis data yang bisa ditempel di dinding kamar kos.
+
+-- Mode "Brainstorming" pada Asisten AI: Selain memberikan jadwal makan, persona bot AI KUKUSYUK bisa dilengkapi mode diskusi. Saat buntu menyusun alur logika atau mencari ide konsep video promosi kreatif, bot ini bisa diajak berdiskusi ringan untuk memancing ide (rubber ducking) sebelum mahasiswa kembali fokus ke draf tugasnya.
+
+= KING 
+
+* Revisi color pallet : 
+* 

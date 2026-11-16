@@ -1,0 +1,40 @@
+Revisi Paket makanan 
+1. Paket Diet : 20.000
+2. Paket Balance : 27.000
+3. Paket Bulking : 33.000
+--DONE
+
+waktunya dan hari ngambil khusus batch ini cuma kamis terus waktubya cuma jam 10.00-11.30
+
+
+
+- lokasinya cuma di upn aja
+
+
+- spreadsheetnyaa
+--DONE, melihat history bisa langsung ke halaman admin
+
+buat form isinya cuma nama lengkap, nomor wa, pilihan batch ( Batch yang nentuin kita ), catatan ( jika ada ), metode pembayaran hanya pakai qris ( habis ini tak up) trus mereka up bukti qris
+
+ada menu pembayaran, disitu ada timbul qris statis yang akan tampil oleh user. user akan scan dan langsung melanjutkan pembayaran. bukti pembayaran kirim ke WA. 
+
+AREA jangkauan UPN dan sekitarnya
+
+Section Value Promotion diantar sekitar UPN
+
++ form close order otomatis misal jam 15.00, 3 november
+
+
+FAQQ : 	
+ee sm tolong editin tanggal dianternya jadi hari kamis bsk ajah
+--DONE
+
+rek lek misal nanti ordernya lewat form aja gimana, terus kalau iya berarti nanti nyimpen datanya di spreadsheet atau dimana
+soale admin nanti cuma buat kalau ada pertanyaan,masalah,refund mbek membership doang
+https://forms.gle/tBycYwF7oNf6j4ze9
+isi e kira2 kek gini
+
+tetep pakai bos, maksudku nanti customer kan isi form order nah itu kan masuk nih di kita, tim finance verifikasi bener gak orderannya sama uangnya masuk apa gak, kalau udah nanti aku rubah misal di spreadsheet jadi centang gitu, terus baru di proses tim kitchen
+
+
+

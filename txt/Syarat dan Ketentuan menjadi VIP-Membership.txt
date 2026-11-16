@@ -1,0 +1,38 @@
+Syarat dan Ketentuan menjadi VIP-Membership 
+
+1. Kelayakan & Pendaftaran Akun
+Keakuratan Data: Pengguna wajib mengisi data identitas secara benar dan dapat dipertanggungjawabkan, meliputi nama lengkap, alamat email aktif, nomor WhatsApp (+62), serta status pekerjaan saat melakukan registrasi maupun pengisian formulir pembayaran.
+
+Kepemilikan Akun Tunggal: Satu akun hanya diperuntukkan bagi satu individu. Pengguna bertanggung jawab penuh menjaga kerahasiaan kata sandi (password) dan kode verifikasi OTP yang dikirimkan ke email atau akun Google terdaftar.
+
+Larangan Berbagi Akun (Account Sharing): Pengguna dilarang keras meminjamkan, menyewakan, atau memperjualbelikan akses akun VIP kepada pihak lain.
+
+2. Biaya Keanggotaan, Pembayaran & Kode Promo
+Tarif Resmi: Biaya keanggotaan VIP Member Kuksyuk-CampusFit ditetapkan sebesar Rp60.000 per periode langganan yang berlaku.
+
+Penggunaan Kode Promo: Pengguna berhak mendapatkan potongan harga menjadi Rp50.000 apabila memasukkan kode promo resmi yang diperoleh langsung melalui komunikasi dengan Admin Kuksyuk-CampusFit. Kode promo tidak dapat diuangkan dan hanya berlaku satu kali per transaksi.
+
+Ketepatan Nominal Transfer: Pembayaran dilakukan melalui metode QRIS yang tersedia pada halaman pembayaran. Pengguna wajib mentransfer sesuai dengan nominal akhir yang tertera pada layar status pembayaran (Rp50.000 jika memakai kode promo valid, atau Rp60.000 tanpa kode promo).
+
+3. Verifikasi & Aktivasi Status VIP
+Proses Konfirmasi Manual: Setelah mengirimkan formulir pembayaran dan bukti transaksi, status akun akan berada pada tahap Menunggu Konfirmasi. Admin akan memverifikasi mutasi dana masuk dan validitas kode promo maksimal dalam waktu 1x24 jam setelah transaksi dikirimkan.
+
+Penolakan Transaksi: Admin berhak menolak pengajuan VIP apabila dana tidak ditemukan pada mutasi rekening, nominal transfer kurang dari tagihan, atau bukti pembayaran terindikasi palsu/hasil rekayasa.
+
+4. Kebijakan Pengembalian Dana (Refund)
+Non-Refundable: Biaya keanggotaan yang telah dibayarkan dan berhasil diverifikasi menjadi status VIP Member tidak dapat dibatalkan maupun dikembalikan (non-refundable) dengan alasan apa pun.
+
+Pengecualian: Pengembalian dana hanya diproses apabila terbukti terjadi kesalahan teknis sistem atau transfer ganda (double payment) dengan melampirkan bukti mutasi resmi kepada Admin.
+
+5. Hak Kekayaan Intelektual & Batasan Penggunaan
+Penggunaan Pribadi: Seluruh fitur premium, materi, panduan, maupun layanan eksklusif di dalam ekosistem Kuksyuk-CampusFit dilindungi hak cipta dan hanya boleh digunakan untuk keperluan pribadi pengguna.
+
+Larangan Distribusi Ulang: Pengguna dilarang menyalin, mengunduh massal (scraping), memodifikasi, atau menyebarluaskan konten dan fitur premium ke pihak ketiga tanpa izin tertulis dari pengelola Kuksyuk-CampusFit.
+
+6. Pelanggaran & Pencabutan Status VIP
+Pengelola berhak membekukan akun dan mencabut status VIP Member secara sepihak tanpa pengembalian dana apabila pengguna terbukti melakukan tindakan kecurangan—termasuk manipulasi data pembayaran, penyalahgunaan celah sistem, pengiriman spam transaksi, atau pelanggaran terhadap aturan berbagi akun.
+
+7. Perubahan Ketentuan & Layanan Bantuan
+Pengelola Kuksyuk-CampusFit berhak memperbarui harga paket, manfaat fitur VIP, maupun isi Syarat dan Ketentuan ini sewaktu-waktu untuk peningkatan kualitas layanan.
+
+Pertanyaan terkait kendala pembayaran, permintaan kode promo, atau pelaporan masalah akun dapat disampaikan langsung melalui tombol Chat Admin yang tersedia di halaman website.

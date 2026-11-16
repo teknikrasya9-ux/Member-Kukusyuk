@@ -1,0 +1,52 @@
+Gratis Ongkir dalam pemesanan Batch di seluruh Surabaya 
+2. Integrasi pengingat dan AI. layanan ASISTEN PRIBADI yang bisa berkonsultasi sekaligus mendapat laporan dari diagram sehat harian dalam satu thread percakapan yang rapi
+3. kode promo Khusus 
+4. batch PO khusus untuk 1 minggu berganti-ganti menu (ada timer Waktu habis, di mulai pada hari senin)
+5. Hack makanan sehat anak kos di Surabaya. PDF panduan berisi tips memilih menu sehat di warteg, cara menyimpan makanan tanpa kulkas, dan estimasi jajanan local. 
+6. tamplate notion khusus member meal planner dengan tracker tugas, proyek, dan jadwal mahasiswa selama kuliah. 
+7. pengiriman langusng ke lobi fakultas. drop off ke Gedung saat jam makan siang
+8. Bonus Brain food bulanan ; satu porsi snack untuk memenuhi aktivitasmu selama kuliah. 
+
+
+Grid UI "8 Keuntungan Member" (Format 4x2 untuk Desktop, 2x4 untuk Mobile)
+
+Setiap fitur dibingkai dalam *Card UI* bergaya coretan tebal (tepi membulat dengan garis *border* hitam) agar tetap bernuansa kasual.
+
+* **Kartu 1: Gratis Ongkir Surabaya**
+* *Visual:* Ilustrasi motor vespa melesat dengan kotak katering.
+* *Teks:* Gratis ongkir pemesanan Batch ke seluruh sudut Surabaya!
+
+
+* **Kartu 2: Asisten Pribadi AI & Pengingat**
+* *Visual:* Mockup layar HP yang menampilkan *chat bubble* antara robot koki dan pengguna.
+* *Teks:* Konsultasi diet, pengingat jam makan, & laporan diagram sehat harian dalam satu *thread* WA yang rapi.
+
+
+* **Kartu 3: Kode Promo Khusus**
+* *Visual:* Tiket kupon dengan ikon gembok terbuka.
+* *Teks:* Akses ke kode promo rahasia khusus member setia.
+
+
+* **Kartu 4: Batch PO Khusus Mingguan**
+* *Visual:* Kalender bergambar menu makanan dengan **Live Countdown Timer** berkedip hijau merah (Contoh: *Tutup dalam 01 Hari : 12 Jam*).
+* *Teks:* Menu ganti-ganti setiap minggu! Siklus selalu dimulai hari Senin.
+
+
+* **Kartu 5: Hack Makanan Kos (PDF Eksklusif)**
+* *Visual:* Buku panduan atau ikon dokumen PDF berstempel "TOP SECRET".
+* *Teks:* PDF Panduan: Tips menu sehat warteg, simpan stok tanpa kulkas, & estimasi kalori jajanan lokal.
+
+
+* **Kartu 6: Template Notion Khusus Mahasiswa**
+* *Visual:* Ikon *workspace* Notion dengan *checklist* dan papan kanban.
+* *Teks:* Meal planner terintegrasi dengan tracker tugas, proyek, dan jadwal kuliahmu.
+
+
+* **Kartu 7: Drop-off Lobi Fakultas**
+* *Visual:* Ilustrasi gedung pilar kampus dan jam dinding yang menunjuk pukul 12.00.
+* *Teks:* Gak perlu jalan jauh. Makanan diantar langsung ke lobi fakultas pas jam makan siang.
+
+
+* **Kartu 8: Bonus Brain Food Bulanan**
+* *Visual:* Ikon otak bersinar dipadukan dengan camilan energi/kacang-kacangan.
+* *Teks:* Satu porsi *snack* bergizi ekstra setiap bulan untuk dukung fokus nugasmu!
