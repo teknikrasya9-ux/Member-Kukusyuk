@@ -7,6 +7,7 @@ import { PaymentPage } from './pages/PaymentPage';
 import { PaymentWaitingPage } from './pages/PaymentWaitingPage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
+import { ActiveMemberPage } from './pages/ActiveMemberPage';
 
 export function App() {
   return (
@@ -30,6 +31,9 @@ export function App() {
           <Route path="/introduction" element={<IntroductionPage />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/payment/waiting" element={<PaymentWaitingPage />} />
+
+          <Route path="/dashboard" element={<ActiveMemberPage />} />
+          <Route path="/campusfit" element={<ActiveMemberPage />} />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />

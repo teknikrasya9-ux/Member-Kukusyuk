@@ -65,7 +65,7 @@ export const AuthPage: React.FC = () => {
       if (!userObj?.user_metadata?.is_vip) {
         navigate('/introduction');
       } else {
-        setRedirectedTo('home');
+        navigate('/dashboard');
       }
       return;
     }

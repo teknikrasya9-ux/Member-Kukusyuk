@@ -35,8 +35,8 @@ export const Navbar: React.FC = () => {
     fetchUserAndStatus();
   }, [location.pathname]);
 
-  // Don't render general navbar on dedicated admin portal pages
-  if (location.pathname.startsWith('/admin')) {
+  // Don't render general navbar on dedicated admin portal pages or VIP member dashboard
+  if (location.pathname.startsWith('/admin') || location.pathname === '/dashboard' || location.pathname === '/campusfit') {
     return null;
   }
 
